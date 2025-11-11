@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify, render_template_string
 import requests
+import os
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # ========================
 # 🔑 Your OpenRouter API key
@@ -97,12 +100,11 @@ def chat():
     if not user_message:
         return jsonify({"reply":"Please type something first!"})
 
-    headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "HTTP-Referer": "http://localhost:5000",
-        "X-Title": "Aashish Chat",
-        "Content-Type": "application/json"
-    }
+   headers = {
+    "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+    "Content-Type": "application/json"
+}
+
 
     payload = {
         "model": "openai/gpt-4o-mini",
@@ -126,5 +128,10 @@ def chat():
 # ========================
 # Run server
 # ========================
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
+
+
